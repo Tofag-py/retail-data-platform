@@ -21,3 +21,7 @@ output "tf_state_bucket_name" {
 output "service_role_arn" {
   value = module.iam.service_role_arn
 }
+
+output "db_endpoint" {
+  value = module.rds.db_endpoint
+}

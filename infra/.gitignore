@@ -2,7 +2,7 @@
 AWSCLIV2.pkg
 
 # Terraform state — contains resource IDs, sometimes secrets in plain text
-.terraform*
+.terraform.lock.hcl
 terraform.tfstate
 terraform.tfstate.backup
 .terraform/

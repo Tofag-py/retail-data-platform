@@ -41,3 +41,14 @@ module "iam" {
   environment           = var.environment
   data_lake_bucket_arn  = "arn:aws:s3:::${module.s3.data_lake_bucket_name}"
 }
+
+module "rds" {
+  source = "./modules/rds"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  vpc_id              = module.vpc.vpc_id
+  vpc_cidr            = "10.0.0.0/16"
+  private_subnet_ids  = module.vpc.private_subnet_ids
+  db_password         = var.db_password
+}
