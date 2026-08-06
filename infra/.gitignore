@@ -1,0 +1,27 @@
+# Installers / downloads — shouldn't be in the repo at all
+AWSCLIV2.pkg
+
+# Terraform state — contains resource IDs, sometimes secrets in plain text
+.terraform*
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+
+# Terraform variable files — may contain secrets, keep local only
+*.tfvars
+*.tfvars.json
+
+# macOS junk
+.DS_Store
+
+# Python (for later — venv, dbt, Glue scripts)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# VS Code
+.vscode/
