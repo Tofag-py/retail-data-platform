@@ -50,5 +50,7 @@ module "rds" {
   vpc_id              = module.vpc.vpc_id
   vpc_cidr            = "10.0.0.0/16"
   private_subnet_ids  = module.vpc.private_subnet_ids
+  public_subnet_ids   = module.vpc.public_subnet_ids
   db_password         = var.db_password
+  my_ip_cidr          = "102.90.116.16/32"
 }

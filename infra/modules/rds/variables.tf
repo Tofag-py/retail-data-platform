@@ -37,3 +37,13 @@ variable "db_password" {
   type      = string
   sensitive = true
 }
+
+variable "my_ip_cidr" {
+  description = "Your IP address in CIDR form, for temporary admin access"
+  type        = string
+}
+
+variable "public_subnet_ids" {
+  description = "Public subnet IDs for temporary public DB access"
+  type        = list(string)
+}
