@@ -25,3 +25,11 @@ output "service_role_arn" {
 output "db_endpoint" {
   value = module.rds.db_endpoint
 }
+
+# output "msk_bootstrap_brokers" {
+#   value = module.msk.bootstrap_brokers_public_tls
+# }
+
+output "kafka_public_ip" {
+  value = module.kafka_ec2.kafka_public_ip
+}

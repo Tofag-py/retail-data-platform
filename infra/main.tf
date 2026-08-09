@@ -54,3 +54,27 @@ module "rds" {
   db_password         = var.db_password
   my_ip_cidr          = "102.90.96.67/32"
 }
+
+# module "msk" {
+#   source = "./modules/msk"
+
+#   project_name        = var.project_name
+#   environment         = var.environment
+#   vpc_id              = module.vpc.vpc_id
+#   vpc_cidr            = "10.0.0.0/16"
+#   public_subnet_ids   = module.vpc.public_subnet_ids
+#   my_ip_cidr          = "102.90.96.67/32"
+# }
+
+
+module "kafka_ec2" {
+  source = "./modules/kafka_ec2"
+
+  project_name       = var.project_name
+  environment        = var.environment
+  vpc_id             = module.vpc.vpc_id
+  vpc_cidr           = "10.0.0.0/16"
+  public_subnet_id   = module.vpc.public_subnet_ids[0]
+  my_ip_cidr         = "102.90.96.67/32"
+  ssh_public_key     = file("~/.ssh/id_ed25519.pub")
+}
