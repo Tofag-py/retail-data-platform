@@ -75,6 +75,6 @@ module "kafka_ec2" {
   vpc_id             = module.vpc.vpc_id
   vpc_cidr           = "10.0.0.0/16"
   public_subnet_id   = module.vpc.public_subnet_ids[0]
-  my_ip_cidr         = "102.90.96.67/32"
+  my_ip_cidr         = "102.90.98.207/32"
   ssh_public_key     = file("~/.ssh/id_ed25519.pub")
 }
