@@ -97,3 +97,21 @@ resource "aws_glue_job" "rds_to_s3" {
     Name = "${var.project_name}-${var.environment}-rds-to-s3"
   }
 }
+
+resource "aws_glue_catalog_database" "curated" {
+  name = "${replace(var.project_name, "-", "_")}_${var.environment}_curated"
+}
+
+resource "aws_glue_crawler" "s3_bronze" {
+  name          = "${var.project_name}-${var.environment}-s3-bronze-crawler"
+  role          = var.glue_role_arn
+  database_name = aws_glue_catalog_database.curated.name
+
+  s3_target {
+    path = "s3://${var.data_lake_bucket_name}/bronze/"
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-s3-bronze-crawler"
+  }
+}
