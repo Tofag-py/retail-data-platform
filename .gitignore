@@ -12,3 +12,4 @@ AWSCLIV2.pkg
 retail_dbt/target/
 retail_dbt/dbt_packages/
 retail_dbt/logs/
+logs/
