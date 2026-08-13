@@ -35,14 +35,14 @@ resource "aws_glue_connection" "rds" {
 
   connection_properties = {
     JDBC_CONNECTION_URL = "jdbc:postgresql://${var.rds_endpoint}/${var.rds_db_name}"
-    USERNAME             = var.rds_username
-    PASSWORD              = var.rds_password
+    USERNAME            = var.rds_username
+    PASSWORD            = var.rds_password
   }
 
   physical_connection_requirements {
     availability_zone      = var.availability_zone
     security_group_id_list = [aws_security_group.glue.id]
-    subnet_id               = var.private_subnet_id
+    subnet_id              = var.private_subnet_id
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_glue_crawler" "rds" {
 
   jdbc_target {
     connection_name = aws_glue_connection.rds.name
-    path             = "${var.rds_db_name}/%"
+    path            = "${var.rds_db_name}/%"
   }
 
   tags = {
@@ -79,19 +79,19 @@ resource "aws_glue_job" "rds_to_s3" {
   }
 
   default_arguments = {
-    "--job-language"                    = "python"
+    "--job-language"                     = "python"
     "--TempDir"                          = "s3://${var.data_lake_bucket_name}/temp/"
-    "--data_lake_bucket"                  = var.data_lake_bucket_name
-    "--glue_database"                      = aws_glue_catalog_database.raw.name
-    "--connection_name"                     = aws_glue_connection.rds.name
-    "--enable-continuous-cloudwatch-log"     = "true"
+    "--data_lake_bucket"                 = var.data_lake_bucket_name
+    "--glue_database"                    = aws_glue_catalog_database.raw.name
+    "--connection_name"                  = aws_glue_connection.rds.name
+    "--enable-continuous-cloudwatch-log" = "true"
   }
 
   connections       = [aws_glue_connection.rds.name]
-  glue_version       = "4.0"
-  worker_type         = "G.1X"
-  number_of_workers    = 2
-  timeout               = 30
+  glue_version      = "4.0"
+  worker_type       = "G.1X"
+  number_of_workers = 2
+  timeout           = 30
 
   tags = {
     Name = "${var.project_name}-${var.environment}-rds-to-s3"
@@ -114,4 +114,12 @@ resource "aws_glue_crawler" "s3_bronze" {
   tags = {
     Name = "${var.project_name}-${var.environment}-s3-bronze-crawler"
   }
+}
+
+# dbt-athena builds staging/mart models into this database. Kept separate from
+# `curated` (crawler-owned, source-of-truth for raw bronze data) so dbt never
+# writes into the same namespace a crawler manages — mirrors the raw/curated
+# split rationale already documented for the JDBC vs S3 crawlers.
+resource "aws_glue_catalog_database" "analytics" {
+  name = "${replace(var.project_name, "-", "_")}_${var.environment}_analytics"
 }

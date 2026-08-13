@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_sellers
+    columns:
+      - name: seller_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_category_translation
+    columns:
+      - name: product_category_name
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_products
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+      # Day 4: two categories (pc_gamer, portateis_cozinha_e_preparadores_de_alimentos)
+      # were missing from category_translation and had to be patched in. This
+      # relationship test formally verifies that patch closed the gap — if a new
+      # product ever ships with an untranslated category, this fails loudly
+      # instead of silently breaking downstream joins.
+      - name: product_category_name
+        tests:
+          - relationships:
+              to: ref('stg_category_translation')
+              field: product_category_name
+
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+  - name: stg_order_items
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+  - name: stg_order_payments
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+  - name: stg_order_reviews
+    columns:
+      # Day 4: 814 duplicate review_ids were found in the raw source and
+      # deduplicated during load (98,410 unique reviews kept). This test
+      # confirms review_id stays unique downstream of that fix — if it ever
+      # fails, the load script's dedup logic has regressed.
+      - name: review_id
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id

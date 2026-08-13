@@ -17,3 +17,7 @@ output "s3_crawler_name" {
 output "curated_database" {
   value = aws_glue_catalog_database.curated.name
 }
+
+output "analytics_database" {
+  value = aws_glue_catalog_database.analytics.name
+}

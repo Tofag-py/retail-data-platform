@@ -33,3 +33,11 @@ output "db_endpoint" {
 # output "kafka_public_ip" {
 #   value = module.kafka_ec2.kafka_public_ip
 # }
+
+output "curated_database" {
+  value = module.glue.curated_database
+}
+
+output "analytics_database" {
+  value = module.glue.analytics_database
+}
