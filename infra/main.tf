@@ -25,7 +25,7 @@ module "vpc" {
 
   project_name       = var.project_name
   environment        = var.environment
-  enable_nat_gateway = true
+  enable_nat_gateway = false
 }
 
 module "s3" {
